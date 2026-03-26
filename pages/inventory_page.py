@@ -15,6 +15,9 @@ class InventoryPage:
     BURGER_MENU_BUTTON = (By.ID, "react-burger-menu-btn")
     PRICE_ELEMENTS = (By.CLASS_NAME, "inventory_item_price")
     NAME_ELEMENTS = (By.CLASS_NAME, "inventory_item_name")
+    SHOPPING_CART_BADGE = (By.CLASS_NAME, "shopping_cart_badge")
+
+    ADD_TO_CART_BUTTON_TEMPLATE = "add-to-cart-{item_name}"
 
     def pick_sort_option(self, sort_value):
         WebDriverWait(self.driver, 5).until(
@@ -51,3 +54,19 @@ class InventoryPage:
             names_of_items.append(raw_text)
         
         return names_of_items
+    
+    def add_item_to_cart_dynamic(self, item_name):
+        dynamic_id = self.ADD_TO_CART_BUTTON_TEMPLATE.format(item_name=item_name)
+        locator = (By.ID, dynamic_id)
+
+        WebDriverWait(self.driver, 5).until(
+            EC.element_to_be_clickable(locator)
+        )
+        self.driver.find_element(*locator).click()
+
+    def get_text_from_cart_badge(self):
+        WebDriverWait(self.driver, 5).until(
+            EC.visibility_of_element_located(self.SHOPPING_CART_BADGE)
+        )
+        text = self.driver.find_element(*self.SHOPPING_CART_BADGE).text
+        return text

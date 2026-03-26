@@ -5,15 +5,6 @@ from selenium import webdriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-@pytest.fixture
-def logged_in_browser(browser):
-    login_page = LoginPage(browser)
-
-    login_page.open()
-    login_page.login_user("standard_user", "secret_sauce")
-
-    WebDriverWait(browser, 5).until(EC.url_contains("inventory"))
-
 def test_filter_lohi(logged_in_browser):
     inventory_page = InventoryPage(logged_in_browser)
     inventory_page.pick_sort_option("lohi")

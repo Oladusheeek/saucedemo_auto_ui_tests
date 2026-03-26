@@ -1,6 +1,10 @@
 import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
+
+from pages.login_page import LoginPage
 
 @pytest.fixture
 def browser():
@@ -16,3 +20,12 @@ def browser():
     driver = webdriver.Chrome(options=options)
     yield driver
     driver.quit()
+
+@pytest.fixture
+def logged_in_browser(browser):
+    login_page = LoginPage(browser)
+
+    login_page.open()
+    login_page.login_user("standard_user", "secret_sauce")
+
+    WebDriverWait(browser, 5).until(EC.url_contains("inventory"))

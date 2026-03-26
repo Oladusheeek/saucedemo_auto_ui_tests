@@ -29,3 +29,7 @@ def logged_in_browser(browser):
     login_page.login_user("standard_user", "secret_sauce")
 
     WebDriverWait(browser, 5).until(EC.url_contains("inventory"))
+
+    yield browser
+
+    browser.delete_all_cookies()

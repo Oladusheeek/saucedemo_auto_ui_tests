@@ -13,9 +13,6 @@ class LoginPage(BasePage):
     PASSWORD_FIELD = (By.ID, "password")
     LOGIN_BUTTON = (By.ID, "login-button")
     ERROR_BANNER = (By.CSS_SELECTOR, "[data-test='error']")
-
-    def open(self):
-        self.driver.get("https://www.saucedemo.com/")
     
     def enter_username(self, username):
         self.enter_text(self.USERNAME_FIELD, username)

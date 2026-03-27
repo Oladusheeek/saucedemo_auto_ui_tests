@@ -10,4 +10,4 @@ def load_data_json(file_name):
     with open(file_path, 'r', encoding='utf-8') as file:
         data = json.load(file)
 
-    return [tuple(item.values()) for item in data]
+    return data

@@ -18,6 +18,7 @@ class InventoryPage:
     SHOPPING_CART_BADGE = (By.CLASS_NAME, "shopping_cart_badge")
 
     ADD_TO_CART_BUTTON_TEMPLATE = "add-to-cart-{item_name}"
+    REMOVE_BUTTON_TEMPLATE = "remove-{item_name}"
 
     def pick_sort_option(self, sort_value):
         WebDriverWait(self.driver, 5).until(
@@ -61,8 +62,33 @@ class InventoryPage:
 
         WebDriverWait(self.driver, 5).until(
             EC.element_to_be_clickable(locator)
+        ).click()
+
+    def get_text_add_button(self, item_name):
+        dynamic_id = self.ADD_TO_CART_BUTTON_TEMPLATE.format(item_name=item_name)
+        locator = (By.ID, dynamic_id)
+
+        button = WebDriverWait(self.driver, 5).until(
+            EC.element_to_be_clickable(locator)
         )
-        self.driver.find_element(*locator).click()
+        return button.text
+
+    def remove_item_from_cart_dynamic(self, item_name):
+        dynamic_id = self.REMOVE_BUTTON_TEMPLATE.format(item_name=item_name)
+        locator = (By.ID, dynamic_id)
+
+        WebDriverWait(self.driver, 5).until(
+            EC.element_to_be_clickable(locator)
+        ).click()
+
+    def get_text_remove_button(self, item_name):
+        dynamic_id = self.REMOVE_BUTTON_TEMPLATE.format(item_name=item_name)
+        locator = (By.ID, dynamic_id)
+
+        button = WebDriverWait(self.driver, 5).until(
+            EC.element_to_be_clickable(locator)
+        )
+        return button.text
 
     def get_text_from_cart_badge(self):
         WebDriverWait(self.driver, 5).until(

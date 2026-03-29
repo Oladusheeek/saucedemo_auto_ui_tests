@@ -23,7 +23,7 @@ def pytest_addoption(parser):
 
 @pytest.fixture
 def base_url(request):
-    return request.config.getoption("base-url")
+    return request.config.getoption("--base-url")
 
 @pytest.fixture
 def browser(request):

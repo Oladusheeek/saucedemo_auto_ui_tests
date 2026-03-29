@@ -71,3 +71,6 @@ class InventoryPage(BasePage):
 
     def get_text_from_cart_badge(self):
         return self.get_text(self.SHOPPING_CART_BADGE)
+
+    def open_cart(self):
+        self.click_element(self.CART_BUTTON)

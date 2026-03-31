@@ -36,7 +36,8 @@ def browser(request):
             "credentials_enable_service": False,
             "profile.password_manager_enabled": False
         })
-        options.add_argument("--disable-features=SafeBrowsing")
+        options.add_argument("--incognito")
+        options.add_argument("--disable-features=SafeBrowsing, PasswordLeakDetection")
         options.add_argument("--disable-infobars")
         options.add_argument("--disable-notifications")
         driver = webdriver.Chrome(options=options)
@@ -54,9 +55,9 @@ def browser(request):
 
 @pytest.fixture
 def logged_in_browser(browser, base_url):
+    browser.get(base_url)
     login_page = LoginPage(browser)
 
-    login_page.open(base_url)
     login_page.login_user("standard_user", "secret_sauce")
 
     WebDriverWait(browser, 5).until(EC.url_contains("inventory"))
@@ -64,3 +65,5 @@ def logged_in_browser(browser, base_url):
     yield browser
 
     browser.delete_all_cookies()
+    browser.execute_script("window.localStorage.clear();")
+    browser.execute_script("window.sessionStorage.clear();")

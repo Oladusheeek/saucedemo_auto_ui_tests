@@ -7,8 +7,16 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.ui import Select
 
 class BasePage:
+    PAGE_LOAD_LOCATOR = None
     def __init__(self, driver):
         self.driver = driver
+        self.wait_for_page_load()
+
+    def wait_for_page_load(self):
+        if self.PAGE_LOAD_LOCATOR:
+            WebDriverWait(self.driver, 5).until(
+                EC.visibility_of_element_located(self.PAGE_LOAD_LOCATOR),message=f"Page {self.__class__.__name__} did not load! Locator {self.PAGE_LOAD_LOCATOR} was not found!"
+            )
 
     def open(self, url):
         self.driver.get(url)
@@ -25,7 +33,8 @@ class BasePage:
     
     def click_element(self, locator, time=10):
         WebDriverWait(self.driver, timeout=time).until(
-            EC.element_to_be_clickable(locator)
+            EC.element_to_be_clickable(locator),
+            message=f"Cant click on {locator}"
         ).click()
 
     def enter_text(self, locator, text, time=10):

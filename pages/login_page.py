@@ -8,11 +8,12 @@ from selenium.webdriver.support.ui import WebDriverWait
 from pages.base_page import BasePage
 
 class LoginPage(BasePage):
-
     USERNAME_FIELD = (By.ID, "user-name")
     PASSWORD_FIELD = (By.ID, "password")
     LOGIN_BUTTON = (By.ID, "login-button")
     ERROR_BANNER = (By.CSS_SELECTOR, "[data-test='error']")
+
+    PAGE_LOAD_LOCATOR = LOGIN_BUTTON
     
     def enter_username(self, username):
         self.enter_text(self.USERNAME_FIELD, username)

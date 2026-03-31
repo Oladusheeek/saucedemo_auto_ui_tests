@@ -20,6 +20,8 @@ class InventoryPage(BasePage):
     ADD_TO_CART_BUTTON_TEMPLATE = "add-to-cart-{item_name}"
     REMOVE_BUTTON_TEMPLATE = "remove-{item_name}"
 
+    PAGE_LOAD_LOCATOR = NAME_ELEMENTS
+
     def pick_sort_option(self, sort_value):
         first_item_before_sort = self.find_element(self.PRICE_ELEMENTS)
         dropdown_element = self.find_element(self.FILTER_DROPDOWN)

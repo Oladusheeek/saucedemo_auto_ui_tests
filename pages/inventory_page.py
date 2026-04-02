@@ -1,4 +1,4 @@
-import pytest
+import pytest, allure
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -22,6 +22,7 @@ class InventoryPage(BasePage):
 
     PAGE_LOAD_LOCATOR = NAME_ELEMENTS
 
+    @allure.step("Picking sort option: {sort_value}")
     def pick_sort_option(self, sort_value):
         first_item_before_sort = self.find_element(self.PRICE_ELEMENTS)
         dropdown_element = self.find_element(self.FILTER_DROPDOWN)
@@ -30,6 +31,7 @@ class InventoryPage(BasePage):
             EC.staleness_of(first_item_before_sort)
         )
 
+    @allure.step("Inventory: Getting all prices")
     def get_all_prices(self):
         prices_web = self.find_elements(self.PRICE_ELEMENTS)
         prices = []
@@ -38,6 +40,7 @@ class InventoryPage(BasePage):
         
         return prices
     
+    @allure.step("Inventory: Getting all names")
     def get_all_names_items(self):
         names_web = self.find_elements(self.NAME_ELEMENTS)
         names_of_items = []
@@ -47,6 +50,7 @@ class InventoryPage(BasePage):
         
         return names_of_items
     
+    @allure.step("Adding item to cart: {item_name}")
     def add_item_to_cart_dynamic(self, item_name):
         dynamic_id = self.ADD_TO_CART_BUTTON_TEMPLATE.format(item_name=item_name)
         locator = (By.ID, dynamic_id)
@@ -59,6 +63,7 @@ class InventoryPage(BasePage):
 
         return self.get_text(locator)
 
+    @allure.step("Inventory: Removing item from cart")
     def remove_item_from_cart_dynamic(self, item_name):
         dynamic_id = self.REMOVE_BUTTON_TEMPLATE.format(item_name=item_name)
         locator = (By.ID, dynamic_id)
@@ -74,5 +79,6 @@ class InventoryPage(BasePage):
     def get_text_from_cart_badge(self):
         return self.get_text(self.SHOPPING_CART_BADGE)
 
+    @allure.step("Opening cart")
     def open_cart(self):
         self.click_element(self.CART_BUTTON)

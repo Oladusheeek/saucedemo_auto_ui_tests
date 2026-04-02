@@ -1,4 +1,5 @@
 import pytest
+import allure
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -15,15 +16,19 @@ class LoginPage(BasePage):
 
     PAGE_LOAD_LOCATOR = LOGIN_BUTTON
     
+    @allure.step("Enter username: {username}")
     def enter_username(self, username):
         self.enter_text(self.USERNAME_FIELD, username)
 
+    @allure.step("Enter password")
     def enter_password(self, password):
         self.enter_text(self.PASSWORD_FIELD, password)
 
+    @allure.step("Click on login button")
     def click_login_button(self):
         self.click_element(self.LOGIN_BUTTON)
 
+    @allure.step("Login user: {username}")
     def login_user(self, username, password):
         self.enter_username(username)
         self.enter_password(password)

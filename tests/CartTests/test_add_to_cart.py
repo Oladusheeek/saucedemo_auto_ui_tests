@@ -1,4 +1,4 @@
-import pytest
+import pytest, allure
 
 from utility_funcs.load_data import load_data_json
 from pages.login_page import LoginPage
@@ -21,11 +21,13 @@ def test_add_to_cart(logged_in_browser):
         locator = item_name.lower().replace(" ", "-")
         inventory_page.add_item_to_cart_dynamic(locator)
 
-    inventory_page.open_cart()
+    with allure.step(f"Open cart page"):
+        inventory_page.open_cart()
 
     cart_page = CartPage(logged_in_browser)
     cart_names = cart_page.get_all_names_in_cart()
     cart_prices = cart_page.get_all_prices_in_cart()
     all_cart_items = list(zip(cart_names, cart_prices))
 
-    assert expected_items == all_cart_items
+    with allure.step("Check if items in cart are the ones that were picked in inventory"):
+        assert expected_items == all_cart_items

@@ -1,4 +1,4 @@
-import pytest
+import pytest, allure
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -18,6 +18,7 @@ class CartPage(BasePage):
 
     PAGE_LOAD_LOCATOR = CHECKOUT_BUTTON
 
+    @allure.step("Cart: Getting all names")
     def get_all_names_in_cart(self):
         names_web = self.find_elements(self.NAME_ELEMENTS)
         names = []
@@ -26,6 +27,7 @@ class CartPage(BasePage):
 
         return names
     
+    @allure.step("Cart: getting all prices")
     def get_all_prices_in_cart(self):
         prices_web = self.find_elements(self.PRICE_ELEMENTS)
         prices = []
@@ -34,5 +36,6 @@ class CartPage(BasePage):
 
         return prices
     
+    @allure.step("Clicking checkout button")
     def click_checkout_button(self):
         self.click_element(self.CHECKOUT_BUTTON)

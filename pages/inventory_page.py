@@ -11,8 +11,13 @@ from pages.base_page import BasePage
 class InventoryPage(BasePage):
 
     FILTER_DROPDOWN = (By.CLASS_NAME, "product_sort_container")
+
     CART_BUTTON = (By.CLASS_NAME, "shopping_cart_link")
+
     BURGER_MENU_BUTTON = (By.ID, "react-burger-menu-btn")
+    RESET_APP_STATE_BUTTON = (By.CSS_SELECTOR, '[data-test="reset-sidebar-link"]')
+    LOGOUT_BUTTON = (By.CSS_SELECTOR, '[data-test="logout-sidebar-link"]')
+
     PRICE_ELEMENTS = (By.CLASS_NAME, "inventory_item_price")
     NAME_ELEMENTS = (By.CLASS_NAME, "inventory_item_name")
     SHOPPING_CART_BADGE = (By.CLASS_NAME, "shopping_cart_badge")
@@ -50,6 +55,13 @@ class InventoryPage(BasePage):
         
         return names_of_items
     
+    def get_all_items(self):
+        item_name = self.get_all_names_items()
+        item_price = self.get_all_prices()
+
+        all_items = list(zip(item_name, item_price))
+        return all_items
+    
     @allure.step("Adding item to cart: {item_name}")
     def add_item_to_cart_dynamic(self, item_name):
         dynamic_id = self.ADD_TO_CART_BUTTON_TEMPLATE.format(item_name=item_name)
@@ -78,6 +90,21 @@ class InventoryPage(BasePage):
 
     def get_text_from_cart_badge(self):
         return self.get_text(self.SHOPPING_CART_BADGE)
+    
+    def is_cart_badge_present(self):
+        return self.is_element_present(self.SHOPPING_CART_BADGE)
+    
+    @allure.step("Open burger menu")
+    def click_burger_menu_button(self):
+        self.click_element(self.BURGER_MENU_BUTTON)
+
+    @allure.step("Click on 'Reset app state' button")
+    def reset_app_state(self):
+        self.click_element(self.RESET_APP_STATE_BUTTON)
+
+    @allure.step("Logout")
+    def logout(self):
+        self.click_element(self.LOGOUT_BUTTON)
 
     @allure.step("Opening cart")
     def open_cart(self):

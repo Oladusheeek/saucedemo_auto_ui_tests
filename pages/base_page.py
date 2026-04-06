@@ -50,3 +50,7 @@ class BasePage:
             raw_text = priceString.text
             clean_text = raw_text.replace("$", "")
             return float(clean_text)
+    
+    def is_element_present(self, locator):
+        elements = self.driver.find_elements(*locator)
+        return len(elements) > 0

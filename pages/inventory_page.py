@@ -69,6 +69,10 @@ class InventoryPage(BasePage):
 
         self.click_element(locator)
 
+    def click_item_title(self, item_name):
+        locator = (By.XPATH, f"//div[text()='{item_name}']")
+        self.click_element(locator)
+
     def get_text_add_button(self, item_name):
         dynamic_id = self.ADD_TO_CART_BUTTON_TEMPLATE.format(item_name=item_name)
         locator = (By.ID, dynamic_id)

@@ -1,10 +1,14 @@
-import pytest
+import pytest, allure
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.edge.options import Options as EdgeOptions
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
+
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
 from pages.login_page import LoginPage
 
@@ -18,7 +22,7 @@ def pytest_addoption(parser):
     parser.addoption(
         "--base-url",
         action="store",
-        default="https://www.saucedemo.com/"
+        default=os.getenv("BASE_URL", "https://www.saucedemo.com/")
     )
 
 @pytest.fixture
@@ -58,7 +62,8 @@ def logged_in_browser(browser, base_url):
     browser.get(base_url)
     login_page = LoginPage(browser)
 
-    login_page.login_user("standard_user", "secret_sauce")
+    password = os.getenv("SAUCE_PASSWORD")
+    login_page.login_user("standard_user", password)
 
     WebDriverWait(browser, 5).until(EC.url_contains("inventory"))
 
@@ -67,3 +72,28 @@ def logged_in_browser(browser, base_url):
     browser.delete_all_cookies()
     browser.execute_script("window.localStorage.clear();")
     browser.execute_script("window.sessionStorage.clear();")
+
+
+
+@pytest.hookimpl(tryfirst=True, hookwrapper=True)
+def pytest_runtest_makereport(item, call): # screenshot on test failure
+    outcome = yield
+    rep = outcome.get_result()
+    
+    if rep.when == 'call' and rep.failed: # only on stage 'call' and only if test have failed
+        driver = None
+        browser_fixtures = ['browser', 'logged_in_browser', ] #list of fixtures that can be used in tests
+        for fixture_name in browser_fixtures:
+            if fixture_name in item.funcargs:
+                driver = item.funcargs[fixture_name]
+                break
+            
+        if driver:
+            try:
+                allure.attach(
+                    driver.get_screenshot_as_png(),
+                    name=f"Screenshot_of_error_{item.name}",
+                    attachment_type=allure.attachment_type.PNG
+                )
+            except Exception as e:
+                print(f"Failed to make screenshot:  {e}")

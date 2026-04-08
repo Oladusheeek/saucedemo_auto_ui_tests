@@ -27,7 +27,7 @@ class InventoryPage(BasePage):
             EC.staleness_of(first_item_before_sort)
         )
 
-    @allure.step("Inventory: Getting all prices")
+    @allure.step("InventoryPage: Getting all prices")
     def get_all_prices(self):
         prices_web = self.find_elements(self.PRICE_ELEMENTS)
         prices = []
@@ -36,7 +36,7 @@ class InventoryPage(BasePage):
         
         return prices
     
-    @allure.step("Inventory: Getting all names")
+    @allure.step("InventoryPage: Getting all names")
     def get_all_names_items(self):
         names_web = self.find_elements(self.NAME_ELEMENTS)
         names_of_items = []
@@ -46,6 +46,7 @@ class InventoryPage(BasePage):
         
         return names_of_items
     
+    @allure.step("InventoryPage: getting all items")
     def get_all_items(self):
         item_name = self.get_all_names_items()
         item_price = self.get_all_prices()
@@ -53,30 +54,33 @@ class InventoryPage(BasePage):
         all_items = list(zip(item_name, item_price))
         return all_items
     
-    @allure.step("Adding item to cart: {item_name}")
+    @allure.step("InventoryPage: Adding item to cart: {item_name}")
     def add_item_to_cart_dynamic(self, item_name):
         dynamic_id = self.ADD_TO_CART_BUTTON_TEMPLATE.format(item_name=item_name)
         locator = (By.ID, dynamic_id)
 
         self.click_element(locator)
 
+    @allure.step("InventoryPage: clicking item_title of item: {item_name}")
     def click_item_title(self, item_name):
         locator = (By.XPATH, f"//div[text()='{item_name}']")
         self.click_element(locator)
 
+    @allure.step("InventoryPage: getting text from add button of item: {item_name}")
     def get_text_add_button(self, item_name):
         dynamic_id = self.ADD_TO_CART_BUTTON_TEMPLATE.format(item_name=item_name)
         locator = (By.ID, dynamic_id)
 
         return self.get_text(locator)
 
-    @allure.step("Inventory: Removing item from cart")
+    @allure.step("InventoryPage: Removing item {item_name} from cart")
     def remove_item_from_cart_dynamic(self, item_name):
         dynamic_id = self.REMOVE_BUTTON_TEMPLATE.format(item_name=item_name)
         locator = (By.ID, dynamic_id)
 
         self.click_element(locator)
 
+    @allure.step("InventoryPage: getting text from remove button of item: {item_name}")
     def get_text_remove_button(self, item_name):
         dynamic_id = self.REMOVE_BUTTON_TEMPLATE.format(item_name=item_name)
         locator = (By.ID, dynamic_id)

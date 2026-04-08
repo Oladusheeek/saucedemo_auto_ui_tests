@@ -35,8 +35,10 @@ class ItemCardPage(BasePage):
     def go_to_inventory(self):
         self.click_element(self.BACK_BUTTON)
 
+    @allure.step("ItemCardPage: getting text from remove button")
     def get_text_remove_button(self):
         return self.get_text(self.REMOVE_BUTTON)
     
+    @allure.step("ItemCardPage: getting text from add button")
     def get_text_add_button(self):
         return self.get_text(self.ADD_TO_CART_BUTTON)

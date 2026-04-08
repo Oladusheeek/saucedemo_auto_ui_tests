@@ -1,3 +1,4 @@
+import allure
 from pages.base_page import BasePage
 
 from selenium.webdriver.common.by import By
@@ -14,18 +15,22 @@ class CheckoutStepTwoPage(BasePage):
 
     PAGE_LOAD_LOCATOR = FINISH_BUTTON
 
+    @allure.step("CheckoutStepTwo : click cancel button")
     def click_cancel_button(self):
         self.click_element(self.CANCEL_BUTTON)
 
+    @allure.step("CheckoutStepTwo : click finish button")
     def click_finish_button(self):
         self.click_element(self.FINISH_BUTTON)
 
+    @allure.step("CheckoutStepTwo : getting total cost")
     def get_total_item_cost(self):
         raw_text = self.get_text(self.TOTAL_ITEM_COST_LABEL)
         clean_text = raw_text.split("$")[1]
 
         return float(clean_text)
 
+    @allure.step("CheckoutStepTwo : getting items' names")
     def get_items_names(self):
         web_elements = self.find_elements(self.NAME_ELEMENTS)
         items_names = []
@@ -34,6 +39,7 @@ class CheckoutStepTwoPage(BasePage):
 
         return items_names
 
+    @allure.step("CheckoutStepTwo : getting items' prices")
     def get_items_prices(self):
         web_elements = self.find_elements(self.PRICE_ELEMENTS)
         items_prices = []
@@ -42,6 +48,7 @@ class CheckoutStepTwoPage(BasePage):
 
         return items_prices
     
+    @allure.step("CheckoutStepTwo : calculating sum of items' prices")
     def sum_of_items_prices(self):
         array_of_prices = self.get_items_prices()
         return sum(array_of_prices)

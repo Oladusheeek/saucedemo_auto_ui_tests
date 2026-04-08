@@ -11,23 +11,24 @@ class LoginPage(BasePage):
 
     PAGE_LOAD_LOCATOR = LOGIN_BUTTON
     
-    @allure.step("Enter username: {username}")
+    @allure.step("LoginPage: Entering username: {username}")
     def enter_username(self, username):
         self.enter_text(self.USERNAME_FIELD, username)
 
-    @allure.step("Enter password")
+    @allure.step("LoginPage: Entering password")
     def enter_password(self, password):
         self.enter_text(self.PASSWORD_FIELD, password)
 
-    @allure.step("Click on login button")
+    @allure.step("LoginPage: Clicking on login button")
     def click_login_button(self):
         self.click_element(self.LOGIN_BUTTON)
 
-    @allure.step("Login user: {username}")
+    @allure.step("LoginPage: Login user: {username}")
     def login_user(self, username, password):
         self.enter_username(username)
         self.enter_password(password)
         self.click_login_button()
 
+    @allure.step("LoginPage: getting error text")
     def get_error_text(self):
         return self.get_text(self.ERROR_BANNER)

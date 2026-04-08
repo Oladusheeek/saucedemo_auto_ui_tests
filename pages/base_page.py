@@ -19,45 +19,54 @@ class BasePage:
         self.driver = driver
         self.wait_for_page_load()
 
+    @allure.step("Waiting for page to load")
     def wait_for_page_load(self):
         if self.PAGE_LOAD_LOCATOR:
             WebDriverWait(self.driver, 5).until(
                 EC.visibility_of_element_located(self.PAGE_LOAD_LOCATOR),message=f"Page {self.__class__.__name__} did not load! Locator {self.PAGE_LOAD_LOCATOR} was not found!"
             )
 
+    @allure.step("Opening page: {url}")
     def open(self, url):
         self.driver.get(url)
 
+    @allure.step("Finding element with locator: {locator}")
     def find_element(self, locator, time=10):
         return WebDriverWait(self.driver, timeout=time).until(
             EC.visibility_of_element_located(locator)
         )
     
+    @allure.step("Finding elementS with locator: {locator}")
     def find_elements(self, locator, time=10):
         return WebDriverWait(self.driver, time).until(
             EC.visibility_of_all_elements_located(locator)
         )
     
+    @allure.step("Clicking element: {locator}")
     def click_element(self, locator, time=10):
         WebDriverWait(self.driver, timeout=time).until(
             EC.element_to_be_clickable(locator),
             message=f"Cant click on {locator}"
         ).click()
 
+    @allure.step("Entering text: {text} to locator: {locator}")
     def enter_text(self, locator, text, time=10):
         WebDriverWait(self.driver, timeout=time).until(
             EC.element_to_be_clickable(locator)
         ).send_keys(text)
 
+    @allure.step("Getting text from: {locator}")
     def get_text(self, locator, time=10):
         web_element = self.find_element(locator, time)
         return web_element.text
     
+    @allure.step("Converting web element to float")
     def _element_to_float(self, priceString):
             raw_text = priceString.text
             clean_text = raw_text.replace("$", "")
             return float(clean_text)
     
+    @allure.step("Checking if element is present")
     def is_element_present(self, locator):
         elements = self.driver.find_elements(*locator)
         return len(elements) > 0
@@ -78,9 +87,11 @@ class BasePage:
     def open_cart(self):
         self.click_element(self.CART_BUTTON)
 
+    @allure.step("Getting text from cart badge")
     def get_text_from_cart_badge(self):
         return self.get_text(self.SHOPPING_CART_BADGE)
     
+    @allure.step("Checking if cart badge is present")
     def is_cart_badge_present(self):
         return self.is_element_present(self.SHOPPING_CART_BADGE)
     

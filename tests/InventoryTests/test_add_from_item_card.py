@@ -25,4 +25,4 @@ def test_add_from_item_cart(logged_in_browser):
     item_card_page.add_to_cart()
 
     assert item_card_page.get_text_from_cart_badge() == "1"
-    assert item_card_page.get_text_remove_button() == "addremove"
+    assert item_card_page.get_text_remove_button() == "Remove"

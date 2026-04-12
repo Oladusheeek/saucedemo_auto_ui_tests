@@ -8,8 +8,9 @@ def test_login_negative(browser, base_url, test_data):
     password = test_data["password"]
     error_msg = test_data["error_msg"]
 
+    browser.get(base_url)
+
     login_page = LoginPage(browser)
-    login_page.open(base_url)
     login_page.login_user(username, password)
 
     assert login_page.get_error_text() == error_msg

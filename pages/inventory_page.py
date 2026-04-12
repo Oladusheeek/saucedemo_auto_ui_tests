@@ -20,12 +20,15 @@ class InventoryPage(BasePage):
 
     @allure.step("Picking sort option: {sort_value}")
     def pick_sort_option(self, sort_value):
-        first_item_before_sort = self.find_element(self.PRICE_ELEMENTS)
+        first_item_text_before_sort = self.get_text(self.PRICE_ELEMENTS)
         dropdown_element = self.find_element(self.FILTER_DROPDOWN)
         Select(dropdown_element).select_by_value(sort_value)
-        WebDriverWait(self.driver, 5).until(
-            EC.staleness_of(first_item_before_sort)
-        )
+
+        if sort_value != "az":
+            WebDriverWait(self.driver, 5).until(
+                lambda driver: driver.find_element(*self.NAME_ELEMENTS).text != first_item_text_before_sort,
+                message=f"Filter: {sort_value} has not applied to items"
+            )
 
     @allure.step("InventoryPage: Getting all prices")
     def get_all_prices(self):

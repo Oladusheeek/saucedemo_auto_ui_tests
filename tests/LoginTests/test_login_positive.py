@@ -8,8 +8,9 @@ def test_login_positive(browser, base_url, test_data):
     password = test_data["password"]
     expected_url = test_data["expected_url"]
 
+    browser.get(base_url)
+
     login_page = LoginPage(browser)
-    login_page.open(base_url)
     login_page.login_user(username, password)
 
     assert expected_url in browser.current_url

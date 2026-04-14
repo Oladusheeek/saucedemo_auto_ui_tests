@@ -1,10 +1,11 @@
+import random
 from pages.inventory_page import InventoryPage
 
 def test_reset_app_state(logged_in_browser):
     inventory_page = InventoryPage(logged_in_browser)
 
     all_items = inventory_page.get_all_items()
-    expected_items = all_items[:3]
+    expected_items = random.sample(all_items, 3)
     for item_name, item_price in expected_items:
         locator = item_name.lower().replace(" ", "-")
         inventory_page.add_item_to_cart_dynamic(locator)

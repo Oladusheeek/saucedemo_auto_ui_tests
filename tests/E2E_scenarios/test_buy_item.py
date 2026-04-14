@@ -1,4 +1,4 @@
-import pytest
+import pytest, random
 from pages.login_page import LoginPage
 from pages.inventory_page import InventoryPage
 from pages.cart_page import CartPage
@@ -13,7 +13,7 @@ def test_buy_item(logged_in_browser):
     item_prices = inventory_page.get_all_prices()
     all_items = list(zip(item_names, item_prices))
 
-    expected_items = all_items[:3]
+    expected_items = random.sample(all_items, 3)
     for item_name, item_price in expected_items:
         locator = item_name.lower().replace(" ", "-")
         inventory_page.add_item_to_cart_dynamic(locator)

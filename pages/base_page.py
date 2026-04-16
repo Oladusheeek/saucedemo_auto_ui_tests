@@ -2,6 +2,7 @@ import allure
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.common.exceptions import TimeoutException
 
 class BasePage:
     PAGE_LOAD_LOCATOR = None
@@ -67,7 +68,14 @@ class BasePage:
             return float(clean_text)
     
     @allure.step("Checking if element is present")
-    def is_element_present(self, locator):
+    def is_element_present(self, locator, time=10):
+        try:
+            WebDriverWait(self.driver, 5).until(
+                EC.visibility_of_element_located(locator)
+            )
+        except TimeoutException:
+            return False
+        
         elements = self.driver.find_elements(*locator)
         return len(elements) > 0
     

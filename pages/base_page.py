@@ -1,4 +1,5 @@
 import allure
+import os
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
@@ -15,6 +16,7 @@ class BasePage:
     RESET_APP_STATE_BUTTON = (By.CSS_SELECTOR, '[data-test="reset-sidebar-link"]')
     LOGOUT_BUTTON = (By.CSS_SELECTOR, '[data-test="logout-sidebar-link"]')
 
+    DEFAULT_TIMEOUT = int(os.getenv("DEFAULT_TIMEOUT", 10))
 
     def __init__(self, driver):
         self.driver = driver
@@ -23,7 +25,7 @@ class BasePage:
     @allure.step("Waiting for page to load")
     def wait_for_page_load(self):
         if self.PAGE_LOAD_LOCATOR:
-            WebDriverWait(self.driver, 5).until(
+            WebDriverWait(self.driver, self.DEFAULT_TIMEOUT).until(
                 EC.visibility_of_element_located(self.PAGE_LOAD_LOCATOR),message=f"Page {self.__class__.__name__} did not load! Locator {self.PAGE_LOAD_LOCATOR} was not found!"
             )
 
@@ -32,33 +34,41 @@ class BasePage:
         self.driver.get(url)
 
     @allure.step("Finding element with locator: {locator}")
-    def find_element(self, locator, time=10):
-        return WebDriverWait(self.driver, timeout=time).until(
+    def find_element(self, locator, timeout=None):
+        if timeout is None:
+            timeout = self.DEFAULT_TIMEOUT
+        return WebDriverWait(self.driver, timeout).until(
             EC.visibility_of_element_located(locator)
         )
     
     @allure.step("Finding elementS with locator: {locator}")
-    def find_elements(self, locator, time=10):
-        return WebDriverWait(self.driver, time).until(
+    def find_elements(self, locator, timeout=None):
+        if timeout is None:
+            timeout = self.DEFAULT_TIMEOUT
+        return WebDriverWait(self.driver, timeout).until(
             EC.visibility_of_all_elements_located(locator)
         )
     
     @allure.step("Clicking element: {locator}")
-    def click_element(self, locator, time=10):
-        WebDriverWait(self.driver, timeout=time).until(
+    def click_element(self, locator, timeout=None):
+        if timeout is None:
+            timeout = self.DEFAULT_TIMEOUT
+        WebDriverWait(self.driver, timeout).until(
             EC.element_to_be_clickable(locator),
             message=f"Cant click on {locator}"
         ).click()
 
     @allure.step("Entering text: {text} to locator: {locator}")
-    def enter_text(self, locator, text, time=10):
-        WebDriverWait(self.driver, timeout=time).until(
+    def enter_text(self, locator, text, timeout=None):
+        if timeout is None:
+            timeout = self.DEFAULT_TIMEOUT
+        WebDriverWait(self.driver, timeout).until(
             EC.element_to_be_clickable(locator)
         ).send_keys(text)
 
     @allure.step("Getting text from: {locator}")
-    def get_text(self, locator, time=10):
-        web_element = self.find_element(locator, time)
+    def get_text(self, locator, timeout=None):
+        web_element = self.find_element(locator, timeout=timeout)
         return web_element.text
     
     @allure.step("Converting web element to float")
@@ -68,14 +78,18 @@ class BasePage:
             return float(clean_text)
     
     @allure.step("Checking if element is present")
-    def is_element_present(self, locator, time=10):
-        try:
-            WebDriverWait(self.driver, 5).until(
-                EC.visibility_of_element_located(locator)
-            )
-        except TimeoutException:
-            return False
-        
+    def is_element_present(self, locator, timeout=0):
+        if timeout is None:
+            timeout = self.DEFAULT_TIMEOUT
+
+        if timeout > 0:
+            try:
+                WebDriverWait(self.driver, timeout).until(
+                    EC.visibility_of_element_located(locator)
+                )
+            except TimeoutException:
+                return False
+            
         elements = self.driver.find_elements(*locator)
         return len(elements) > 0
     
@@ -104,8 +118,10 @@ class BasePage:
         return self.is_element_present(self.SHOPPING_CART_BADGE)
     
     @allure.step("Waiting for cart_badge to update to: '{expected_text}'")
-    def wait_for_cart_badge_to_update(self, expected_text, time=5):
-        WebDriverWait(self.driver, time).until(
+    def wait_for_cart_badge_to_update(self, expected_text, timeout=None):
+        if timeout is None:
+            timeout = self.DEFAULT_TIMEOUT
+        WebDriverWait(self.driver, timeout).until(
             EC.text_to_be_present_in_element(self.SHOPPING_CART_BADGE, expected_text),
             message=f"Counter did not update to: {expected_text}"
         )

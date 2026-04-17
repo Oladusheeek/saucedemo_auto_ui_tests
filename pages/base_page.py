@@ -4,6 +4,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.remote.webelement import WebElement
+
+from typing import Optional
 
 class BasePage:
     PAGE_LOAD_LOCATOR = None
@@ -23,18 +26,18 @@ class BasePage:
         self.wait_for_page_load()
 
     @allure.step("Waiting for page to load")
-    def wait_for_page_load(self):
+    def wait_for_page_load(self) -> None:
         if self.PAGE_LOAD_LOCATOR:
             WebDriverWait(self.driver, self.DEFAULT_TIMEOUT).until(
                 EC.visibility_of_element_located(self.PAGE_LOAD_LOCATOR),message=f"Page {self.__class__.__name__} did not load! Locator {self.PAGE_LOAD_LOCATOR} was not found!"
             )
 
     @allure.step("Opening page: {url}")
-    def open(self, url):
+    def open(self, url: str) -> None:
         self.driver.get(url)
 
     @allure.step("Finding element with locator: {locator}")
-    def find_element(self, locator, timeout=None):
+    def find_element(self, locator: tuple, timeout: Optional[int]=None) -> WebElement:
         if timeout is None:
             timeout = self.DEFAULT_TIMEOUT
         return WebDriverWait(self.driver, timeout).until(
@@ -42,7 +45,7 @@ class BasePage:
         )
     
     @allure.step("Finding elementS with locator: {locator}")
-    def find_elements(self, locator, timeout=None):
+    def find_elements(self, locator: tuple, timeout: Optional[int]=None) -> list[WebElement]:
         if timeout is None:
             timeout = self.DEFAULT_TIMEOUT
         return WebDriverWait(self.driver, timeout).until(
@@ -50,7 +53,7 @@ class BasePage:
         )
     
     @allure.step("Clicking element: {locator}")
-    def click_element(self, locator, timeout=None):
+    def click_element(self, locator: tuple, timeout: Optional[int]=None) -> None:
         if timeout is None:
             timeout = self.DEFAULT_TIMEOUT
         WebDriverWait(self.driver, timeout).until(
@@ -59,7 +62,7 @@ class BasePage:
         ).click()
 
     @allure.step("Entering text: {text} to locator: {locator}")
-    def enter_text(self, locator, text, timeout=None):
+    def enter_text(self, locator: tuple, text: str, timeout: Optional[int]=None) -> None:
         if timeout is None:
             timeout = self.DEFAULT_TIMEOUT
         WebDriverWait(self.driver, timeout).until(
@@ -67,21 +70,18 @@ class BasePage:
         ).send_keys(text)
 
     @allure.step("Getting text from: {locator}")
-    def get_text(self, locator, timeout=None):
+    def get_text(self, locator: tuple, timeout: Optional[int]=None) -> str:
         web_element = self.find_element(locator, timeout=timeout)
         return web_element.text
     
     @allure.step("Converting web element to float")
-    def _element_to_float(self, priceString):
-            raw_text = priceString.text
+    def _element_to_float(self, price_element: WebElement) -> float:
+            raw_text = price_element.text
             clean_text = raw_text.replace("$", "")
             return float(clean_text)
     
     @allure.step("Checking if element is present")
-    def is_element_present(self, locator, timeout=0):
-        if timeout is None:
-            timeout = self.DEFAULT_TIMEOUT
-
+    def is_element_present(self, locator: tuple, timeout: int=0) -> bool:
         if timeout > 0:
             try:
                 WebDriverWait(self.driver, timeout).until(
@@ -94,31 +94,31 @@ class BasePage:
         return len(elements) > 0
     
     @allure.step("Open burger menu")
-    def click_burger_menu_button(self):
+    def click_burger_menu_button(self) -> None:
         self.click_element(self.BURGER_MENU_BUTTON)
 
     @allure.step("Click on 'Reset app state' button")
-    def reset_app_state(self):
+    def reset_app_state(self) -> None:
         self.click_element(self.RESET_APP_STATE_BUTTON)
 
     @allure.step("Logout")
-    def logout(self):
+    def logout(self) -> None:
         self.click_element(self.LOGOUT_BUTTON)
 
     @allure.step("Opening cart")
-    def open_cart(self):
+    def open_cart(self) -> None:
         self.click_element(self.CART_BUTTON)
 
     @allure.step("Getting text from cart badge")
-    def get_text_from_cart_badge(self):
+    def get_text_from_cart_badge(self) -> str:
         return self.get_text(self.SHOPPING_CART_BADGE)
     
     @allure.step("Checking if cart badge is present")
-    def is_cart_badge_present(self):
+    def is_cart_badge_present(self) -> bool:
         return self.is_element_present(self.SHOPPING_CART_BADGE)
     
     @allure.step("Waiting for cart_badge to update to: '{expected_text}'")
-    def wait_for_cart_badge_to_update(self, expected_text, timeout=None):
+    def wait_for_cart_badge_to_update(self, expected_text: str, timeout: Optional[int]=None) -> None:
         if timeout is None:
             timeout = self.DEFAULT_TIMEOUT
         WebDriverWait(self.driver, timeout).until(
@@ -127,5 +127,5 @@ class BasePage:
         )
 
     @allure.step("Converting item_name {item_name} to locator")
-    def _item_name_to_locator(self, item_name):
+    def _item_name_to_locator(self, item_name: str ) -> str:
         return item_name.lower().replace(" ", "-")

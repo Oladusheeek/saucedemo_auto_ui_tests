@@ -16,22 +16,22 @@ class CheckoutStepTwoPage(BasePage):
     PAGE_LOAD_LOCATOR = FINISH_BUTTON
 
     @allure.step("CheckoutStepTwo : click cancel button")
-    def click_cancel_button(self):
+    def click_cancel_button(self) -> None:
         self.click_element(self.CANCEL_BUTTON)
 
     @allure.step("CheckoutStepTwo : click finish button")
-    def click_finish_button(self):
+    def click_finish_button(self) -> None:
         self.click_element(self.FINISH_BUTTON)
 
     @allure.step("CheckoutStepTwo : getting total cost")
-    def get_total_item_cost(self):
+    def get_total_item_cost(self) -> float:
         raw_text = self.get_text(self.TOTAL_ITEM_COST_LABEL)
         clean_text = raw_text.split("$")[1]
 
         return float(clean_text)
 
     @allure.step("CheckoutStepTwo : getting items' names")
-    def get_items_names(self):
+    def get_items_names(self) -> list[str]:
         web_elements = self.find_elements(self.NAME_ELEMENTS)
         items_names = []
         for item in web_elements:
@@ -40,7 +40,7 @@ class CheckoutStepTwoPage(BasePage):
         return items_names
 
     @allure.step("CheckoutStepTwo : getting items' prices")
-    def get_items_prices(self):
+    def get_items_prices(self) -> list[float]:
         web_elements = self.find_elements(self.PRICE_ELEMENTS)
         items_prices = []
         for item in web_elements:
@@ -49,6 +49,6 @@ class CheckoutStepTwoPage(BasePage):
         return items_prices
     
     @allure.step("CheckoutStepTwo : calculating sum of items' prices")
-    def sum_of_items_prices(self):
+    def sum_of_items_prices(self) -> float:
         array_of_prices = self.get_items_prices()
         return sum(array_of_prices)

@@ -14,7 +14,7 @@ class CartPage(BasePage):
     PAGE_LOAD_LOCATOR = CHECKOUT_BUTTON
 
     @allure.step("CartPage: Getting all names")
-    def get_all_names_in_cart(self):
+    def get_all_names_in_cart(self) -> list[str]:
         names_web = self.find_elements(self.NAME_ELEMENTS)
         names = []
         for item in names_web:
@@ -23,7 +23,7 @@ class CartPage(BasePage):
         return names
     
     @allure.step("CartPage: getting all prices")
-    def get_all_prices_in_cart(self):
+    def get_all_prices_in_cart(self) -> list[float]:
         prices_web = self.find_elements(self.PRICE_ELEMENTS)
         prices = []
         for item in prices_web:
@@ -32,5 +32,5 @@ class CartPage(BasePage):
         return prices
     
     @allure.step("CartPage: Clicking checkout button")
-    def click_checkout_button(self):
+    def click_checkout_button(self) -> None:
         self.click_element(self.CHECKOUT_BUTTON)

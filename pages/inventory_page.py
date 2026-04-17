@@ -1,6 +1,5 @@
 import allure
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.ui import Select
 
@@ -19,8 +18,8 @@ class InventoryPage(BasePage):
     PAGE_LOAD_LOCATOR = NAME_ELEMENTS
 
     @allure.step("Picking sort option: {sort_value}")
-    def pick_sort_option(self, sort_value):
-        first_item_text_before_sort = self.get_text(self.PRICE_ELEMENTS)
+    def pick_sort_option(self, sort_value: str) -> None:
+        first_item_text_before_sort = self.get_text(self.NAME_ELEMENTS)
         dropdown_element = self.find_element(self.FILTER_DROPDOWN)
         Select(dropdown_element).select_by_value(sort_value)
 
@@ -31,7 +30,7 @@ class InventoryPage(BasePage):
             )
 
     @allure.step("InventoryPage: Getting all prices")
-    def get_all_prices(self):
+    def get_all_prices(self) -> list[float]:
         prices_web = self.find_elements(self.PRICE_ELEMENTS)
         prices = []
         for element in prices_web: # cut dollar sign and convert to float
@@ -40,7 +39,7 @@ class InventoryPage(BasePage):
         return prices
     
     @allure.step("InventoryPage: Getting all names")
-    def get_all_names_items(self):
+    def get_all_names_items(self) -> list[str]:
         names_web = self.find_elements(self.NAME_ELEMENTS)
         names_of_items = []
         for element in names_web:
@@ -50,7 +49,7 @@ class InventoryPage(BasePage):
         return names_of_items
     
     @allure.step("InventoryPage: getting all items")
-    def get_all_items(self):
+    def get_all_items(self) -> list[tuple[str, float]]:
         item_name = self.get_all_names_items()
         item_price = self.get_all_prices()
 
@@ -58,33 +57,33 @@ class InventoryPage(BasePage):
         return all_items
     
     @allure.step("InventoryPage: Adding item to cart: {item_name}")
-    def add_item_to_cart_dynamic(self, item_name):
+    def add_item_to_cart_dynamic(self, item_name: str) -> None:
         dynamic_id = self.ADD_TO_CART_BUTTON_TEMPLATE.format(item_name=item_name)
         locator = (By.ID, dynamic_id)
 
         self.click_element(locator)
 
     @allure.step("InventoryPage: clicking item_title of item: {item_name}")
-    def click_item_title(self, item_name):
+    def click_item_title(self, item_name: str) -> None:
         locator = (By.XPATH, f"//div[text()='{item_name}']")
         self.click_element(locator)
 
     @allure.step("InventoryPage: getting text from add button of item: {item_name}")
-    def get_text_add_button(self, item_name):
+    def get_text_add_button(self, item_name: str) -> str:
         dynamic_id = self.ADD_TO_CART_BUTTON_TEMPLATE.format(item_name=item_name)
         locator = (By.ID, dynamic_id)
 
         return self.get_text(locator)
 
     @allure.step("InventoryPage: Removing item {item_name} from cart")
-    def remove_item_from_cart_dynamic(self, item_name):
+    def remove_item_from_cart_dynamic(self, item_name: str) -> None:
         dynamic_id = self.REMOVE_BUTTON_TEMPLATE.format(item_name=item_name)
         locator = (By.ID, dynamic_id)
 
         self.click_element(locator)
 
     @allure.step("InventoryPage: getting text from remove button of item: {item_name}")
-    def get_text_remove_button(self, item_name):
+    def get_text_remove_button(self, item_name:str) -> str:
         dynamic_id = self.REMOVE_BUTTON_TEMPLATE.format(item_name=item_name)
         locator = (By.ID, dynamic_id)
 

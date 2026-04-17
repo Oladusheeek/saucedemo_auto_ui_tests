@@ -15,30 +15,30 @@ class ItemCardPage(BasePage):
 
     
     @allure.step("ItemCardPage: Getting name")
-    def get_name(self):
+    def get_name(self) -> str:
         return self.get_text(self.NAME_LOCATOR)
 
     @allure.step("ItemCardPage: Getting price")
-    def get_price(self):
+    def get_price(self) -> float:
         price_web = self.find_element(self.PRICE_LOCATOR)
         return self._element_to_float(price_web)
     
     @allure.step("ItemCardPage: Adding item to cart")
-    def add_to_cart(self):
+    def add_to_cart(self) -> None:
         self.click_element(self.ADD_TO_CART_BUTTON)
 
     @allure.step("ItemCardPage: Removing item from cart")
-    def remove_from_cart(self):
+    def remove_from_cart(self) -> None:
         self.click_element(self.REMOVE_BUTTON)
 
     @allure.step("ItemCardPage: Returning to inventory")
-    def go_to_inventory(self):
+    def go_to_inventory(self) -> None:
         self.click_element(self.BACK_BUTTON)
 
     @allure.step("ItemCardPage: getting text from remove button")
-    def get_text_remove_button(self):
+    def get_text_remove_button(self) -> str:
         return self.get_text(self.REMOVE_BUTTON)
     
     @allure.step("ItemCardPage: getting text from add button")
-    def get_text_add_button(self):
+    def get_text_add_button(self) -> str:
         return self.get_text(self.ADD_TO_CART_BUTTON)

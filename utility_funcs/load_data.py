@@ -1,8 +1,8 @@
 import json
-import os
 from pathlib import Path
+from typing import Any
 
-def load_data_json(file_name):
+def load_data_json(file_name: str) -> list[dict[str, Any]]:
     current_file = Path(__file__).resolve()             #
     project_root = current_file.parent.parent           # this block is used to calculate path to
     file_path = project_root / 'test_data' / file_name  # folder with data for tests

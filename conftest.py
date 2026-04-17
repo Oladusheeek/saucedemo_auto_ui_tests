@@ -63,6 +63,8 @@ def logged_in_browser(browser, base_url):
     login_page = LoginPage(browser)
 
     password = os.getenv("SAUCE_PASSWORD")
+    if not password:
+        raise ValueError("Password not found! Check environment")
     login_page.login_user("standard_user", password)
 
     WebDriverWait(browser, 5).until(EC.url_contains("inventory"))

@@ -15,7 +15,7 @@ def test_buy_item(logged_in_browser):
 
     expected_items = random.sample(all_items, 3)
     for item_name, item_price in expected_items:
-        locator = item_name.lower().replace(" ", "-")
+        locator = inventory_page._item_name_to_locator(item_name)
         inventory_page.add_item_to_cart_dynamic(locator)
 
     inventory_page.open_cart()

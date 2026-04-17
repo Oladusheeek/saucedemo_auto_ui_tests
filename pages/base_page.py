@@ -125,3 +125,7 @@ class BasePage:
             EC.text_to_be_present_in_element(self.SHOPPING_CART_BADGE, expected_text),
             message=f"Counter did not update to: {expected_text}"
         )
+
+    @allure.step("Converting item_name {item_name} to locator")
+    def _item_name_to_locator(self, item_name):
+        return item_name.lower().replace(" ", "-")

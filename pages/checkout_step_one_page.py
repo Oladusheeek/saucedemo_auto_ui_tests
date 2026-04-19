@@ -12,6 +12,8 @@ class CheckoutStepOnePage(BasePage):
     LAST_NAME_FIELD = (By.CSS_SELECTOR, '[data-test="lastName"]')
     POSTAL_CODE_FIELD = (By.CSS_SELECTOR, '[data-test="postalCode"]')
 
+    ERROR_BANNER = (By.CSS_SELECTOR, '[data-test="error"]')
+
     PAGE_LOAD_LOCATOR = CONTINUE_BUTTON
 
     @allure.step("CheckoutStepOne : filling first name field")
@@ -40,4 +42,6 @@ class CheckoutStepOnePage(BasePage):
     def click_continue(self) -> None:
         self.click_element(self.CONTINUE_BUTTON)
 
-    
+    @allure.step("CheckoutStepOne: getting error text")
+    def get_error_text(self) -> str:
+        return self.get_text(self.ERROR_BANNER)

@@ -11,7 +11,7 @@ class ItemCardPage(BasePage):
     REMOVE_BUTTON = (By.CSS_SELECTOR, '[data-test="remove"]')
     BACK_BUTTON = (By.CSS_SELECTOR, '[data-test="back-to-products"]')
 
-    PAGE_LOAD_LOCATOR = ADD_TO_CART_BUTTON
+    PAGE_LOAD_LOCATOR = BACK_BUTTON
 
     
     @allure.step("ItemCardPage: Getting name")

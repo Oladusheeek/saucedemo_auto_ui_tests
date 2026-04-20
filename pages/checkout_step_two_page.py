@@ -52,3 +52,8 @@ class CheckoutStepTwoPage(BasePage):
     def sum_of_items_prices(self) -> float:
         array_of_prices = self.get_items_prices()
         return sum(array_of_prices)
+    
+    @allure.step("CheckoutStepTwo : opening item card")
+    def open_item_card(self, item_title: str) -> None:
+        locator = (By.XPATH, f"//div[text()='{item_title}']")
+        self.click_element(locator)

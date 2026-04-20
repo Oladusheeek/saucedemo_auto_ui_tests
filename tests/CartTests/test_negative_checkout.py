@@ -7,6 +7,7 @@ from pages.cart_page import CartPage
 from pages.checkout_step_one_page import CheckoutStepOnePage
 from pages.checkout_step_two_page import CheckoutStepTwoPage
 from pages.checkout_complete_page import CheckoutCompletePage
+from pages.item_card_page import ItemCardPage
 
 @allure.feature("Checkout Process")
 class TestNegativeCheckout:
@@ -53,3 +54,37 @@ class TestNegativeCheckout:
 
         with allure.step("Check if error banner had popped"):
             assert checkstep1_page.get_error_text() == "Error: First Name is required"
+
+    @allure.title("Removing item from CheckoutStepTwo")
+    @allure.severity(allure.severity_level.MINOR)
+    def test_remove_item_from_checkout_step2(self, logged_in_browser, base_url):
+
+        with allure.step("Inject items to LocalStorage"):
+            logged_in_browser.execute_script("window.localStorage.setItem('cart-contents', '[0,1,5]')") 
+            logged_in_browser.get(f"{base_url}checkout-step-one.html")
+
+        checkstep1_page = CheckoutStepOnePage(logged_in_browser)
+        checkstep1_page.fill_form("John", "Doe", "1751784")
+        checkstep1_page.click_continue()
+
+        checkstep2_page = CheckoutStepTwoPage(logged_in_browser)
+        all_items = checkstep2_page.get_items_names()
+        target_item_name = random.choice(all_items)
+        checkstep2_page.open_item_card(target_item_name)
+        all_items.remove(target_item_name)
+
+        item_card_page = ItemCardPage(logged_in_browser)
+        item_card_page.remove_from_cart()
+        item_card_page.go_to_inventory()
+
+        inventory_page = InventoryPage(logged_in_browser)
+
+        with allure.step("Checking that cart badge is now 2"):
+            assert inventory_page.get_text_from_cart_badge() == "2"
+        inventory_page.open_cart()
+
+        cart_page = CartPage(logged_in_browser)
+        cart_items = cart_page.get_all_names_in_cart()
+        
+        with allure.step("Checking that cart-contents are valid"):
+            assert sorted(cart_items) == sorted(all_items), f"Expected items {all_items}, but in cart {cart_items}"

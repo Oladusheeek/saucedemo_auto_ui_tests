@@ -9,6 +9,8 @@ class CheckoutStepTwoPage(BasePage):
     FINISH_BUTTON = (By.CSS_SELECTOR, '[data-test="finish"]')
 
     TOTAL_ITEM_COST_LABEL = (By.CSS_SELECTOR, '[data-test="subtotal-label"]')
+    TAX_LABEL = (By.CSS_SELECTOR, '[data-test="tax-label"]')
+    TOTAL_LABEL = (By.CSS_SELECTOR, '[data-test="total-label"]')
 
     NAME_ELEMENTS = (By.CSS_SELECTOR, '[data-test="inventory-item-name"]')
     PRICE_ELEMENTS = (By.CSS_SELECTOR, '[data-test="inventory-item-price"]')
@@ -23,9 +25,23 @@ class CheckoutStepTwoPage(BasePage):
     def click_finish_button(self) -> None:
         self.click_element(self.FINISH_BUTTON)
 
-    @allure.step("CheckoutStepTwo : getting total cost")
+    @allure.step("CheckoutStepTwo : getting total cost of items")
     def get_total_item_cost(self) -> float:
         raw_text = self.get_text(self.TOTAL_ITEM_COST_LABEL)
+        clean_text = raw_text.split("$")[1]
+
+        return float(clean_text)
+    
+    @allure.step("CheckoutStepTwo : getting tax")
+    def get_tax_label(self) -> float:
+        raw_text = self.get_text(self.TAX_LABEL)
+        clean_text = raw_text.split("$")[1]
+
+        return float(clean_text)
+    
+    @allure.step("CheckoutStepTwo : getting total with tax")
+    def get_total_label(self) -> float:
+        raw_text = self.get_text(self.TOTAL_LABEL)
         clean_text = raw_text.split("$")[1]
 
         return float(clean_text)

@@ -129,3 +129,20 @@ class BasePage:
     @allure.step("Converting item_name {item_name} to locator")
     def _item_name_to_locator(self, item_name: str ) -> str:
         return item_name.lower().replace(" ", "-")
+    
+    @allure.step("Scroll to element: {locator}")
+    def scroll_to(self, locator: tuple) -> None:
+        web_element = self.find_element(locator)
+        self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", web_element)
+
+    @allure.step("Switch to new tab")
+    def switch_to_new_tab(self, original_window: str) -> None:
+        for window_handle in self.driver.window_handles:
+            if window_handle != original_window:
+                self.driver.switch_to.window(window_handle)
+                break
+
+    @allure.step("Close tab and switch back to original window")
+    def close_and_switch_back(self, original_window: str) -> None:
+        self.driver.close()
+        self.driver.switch_to.window(original_window)

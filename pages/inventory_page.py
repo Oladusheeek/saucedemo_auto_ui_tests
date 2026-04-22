@@ -14,6 +14,7 @@ class InventoryPage(BasePage):
 
     ADD_TO_CART_BUTTON_TEMPLATE = "add-to-cart-{item_name}"
     REMOVE_BUTTON_TEMPLATE = "remove-{item_name}"
+    IMAGE_TEMPLATE = 'img[alt="{item_name}"]'
 
     PAGE_LOAD_LOCATOR = NAME_ELEMENTS
 
@@ -88,3 +89,15 @@ class InventoryPage(BasePage):
         locator = (By.ID, dynamic_id)
 
         return self.get_text(locator)
+    
+    @allure.step("InventoryPage : getting 'src' of img {item_name}")
+    def get_src_of_img(self, item_name: str) -> str:
+        dynamic_id = self.IMAGE_TEMPLATE.format(item_name=item_name)
+        locator = (By.CSS_SELECTOR, dynamic_id)
+
+        img_element = self.find_element(locator)
+        src_value = img_element.get_attribute("src")
+
+        assert src_value is not None, f"image_element {item_name} does not have a 'src' tag"
+
+        return src_value

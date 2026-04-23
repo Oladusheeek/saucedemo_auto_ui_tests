@@ -1,9 +1,12 @@
 import allure
+import pytest
 
 from pages.inventory_page import InventoryPage
 from constants.constants import EXPECTED_IMAGES_MAP
+from constants.constants import Users
 
 @allure.feature("Inventory Test")
+@pytest.mark.parametrize("logged_in_browser", [Users.STANDARD, Users.PROBLEM], indirect=True)
 class TestInventory:
 
     @allure.title("Check if image matches item")

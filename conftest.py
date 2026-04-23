@@ -12,6 +12,8 @@ load_dotenv()
 
 from pages.login_page import LoginPage
 
+from constants.constants import Users
+
 def pytest_addoption(parser):
     parser.addoption(
         "--browser-name",
@@ -58,14 +60,17 @@ def browser(request):
     driver.quit()
 
 @pytest.fixture
-def logged_in_browser(browser, base_url):
+def logged_in_browser(browser, base_url, request):
+
+    username = getattr(request, "param", Users.STANDARD)
+
     browser.get(base_url)
     login_page = LoginPage(browser)
 
     password = os.getenv("SAUCE_PASSWORD")
     if not password:
         raise ValueError("Password not found! Check environment")
-    login_page.login_user("standard_user", password)
+    login_page.login_user(username, password)
 
     WebDriverWait(browser, 5).until(EC.url_contains("inventory"))
 

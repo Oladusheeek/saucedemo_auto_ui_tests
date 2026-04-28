@@ -31,7 +31,7 @@ def pytest_addoption(parser):
 def base_url(request):
     return request.config.getoption("--base-url")
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def browser(request):
 
     browser_name = request.config.getoption("browser_name")
@@ -59,6 +59,17 @@ def browser(request):
     yield driver
     driver.quit()
 
+@pytest.fixture(autouse=True)
+def clean_browser_state(browser, base_url):
+    yield
+
+    browser.get(base_url)
+
+    browser.delete_all_cookies()
+    browser.execute_script("window.localStorage.clear();")
+    browser.execute_script("window.sessionStorage.clear();")
+    browser.get("about:blank")
+
 @pytest.fixture
 def logged_in_browser(browser, base_url, request):
 
@@ -75,10 +86,6 @@ def logged_in_browser(browser, base_url, request):
     WebDriverWait(browser, 5).until(EC.url_contains("inventory"))
 
     yield browser
-
-    browser.delete_all_cookies()
-    browser.execute_script("window.localStorage.clear();")
-    browser.execute_script("window.sessionStorage.clear();")
 
 
 

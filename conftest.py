@@ -16,20 +16,20 @@ from constants.constants import Users
 
 def pytest_addoption(parser):
     parser.addoption(
-        "--browser-name",
+        "-BN", "--browser-name",
         action="store",
         default="chrome",
         help="specify the browser"
     )
     parser.addoption(
-        "--base-url",
+        "-BU", "--base-url",
         action="store",
         default=os.getenv("BASE_URL", "https://www.saucedemo.com/")
     )
 
 @pytest.fixture
 def base_url(request):
-    return request.config.getoption("--base-url")
+    return request.config.getoption("--base-url") # get base_url value from config obj of current request fixture
 
 @pytest.fixture(scope="session")
 def browser(request):

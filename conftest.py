@@ -39,7 +39,7 @@ def base_url(request):
 
 @pytest.fixture(scope="session")
 def browser(request):
-    browser_name = request.config.getoption("--browser_name")
+    browser_name = request.config.getoption("--browser-name")
     is_headless = request.config.getoption("--headless")
 
     if browser_name == "chrome":

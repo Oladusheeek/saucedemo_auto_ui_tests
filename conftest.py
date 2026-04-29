@@ -16,15 +16,21 @@ from constants.constants import Users
 
 def pytest_addoption(parser):
     parser.addoption(
-        "-BN", "--browser-name",
+        "--BN", "--browser-name",
         action="store",
         default="chrome",
         help="specify the browser"
     )
     parser.addoption(
-        "-BU", "--base-url",
+        "--BU", "--base-url",
         action="store",
         default=os.getenv("BASE_URL", "https://www.saucedemo.com/")
+    )
+    parser.addoption(
+        "-H", "--headless",
+        action="store_true",
+        default=False,
+        help="run tests in headless mode"
     )
 
 @pytest.fixture
@@ -33,8 +39,9 @@ def base_url(request):
 
 @pytest.fixture(scope="session")
 def browser(request):
-
     browser_name = request.config.getoption("browser_name")
+    is_headless = request.config.getoption("headless")
+
     if browser_name == "chrome":
         options = ChromeOptions()
 
@@ -46,12 +53,22 @@ def browser(request):
         options.add_argument("--disable-features=SafeBrowsing, PasswordLeakDetection")
         options.add_argument("--disable-infobars")
         options.add_argument("--disable-notifications")
+        if is_headless:
+            options.add_argument("--headless")
+            options.add_argument("--no-sandbox")
+            options.add_argument("--disable-dev-shm-usage")
         driver = webdriver.Chrome(options=options)
     elif browser_name == "firefox":
         options = FirefoxOptions()
+        if is_headless:
+            options.add_argument("-headless")
         driver = webdriver.Firefox(options=options)
     elif browser_name == "edge":
         options = EdgeOptions()
+        if is_headless:
+            options.add_argument("--headless")
+            options.add_argument("--no-sandbox")
+            options.add_argument("--disable-dev-shm-usage")
         driver = webdriver.Edge(options=options)
     else:
         raise ValueError(f"Browser {browser_name} is not supported")

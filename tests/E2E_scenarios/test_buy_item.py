@@ -12,8 +12,8 @@ from pages.checkout_complete_page import CheckoutCompletePage
 @allure.feature("E2E : buy item scenario")
 @allure.title("Full happy path of making an order to buy an item")
 @allure.severity(allure.severity_level.CRITICAL)
-def test_buy_item(logged_in_browser):
-    inventory_page = InventoryPage(logged_in_browser)
+def test_buy_item(ui_log_in):
+    inventory_page = InventoryPage(ui_log_in)
 
     item_names = inventory_page.get_all_names_items()
     item_prices = inventory_page.get_all_prices()
@@ -26,7 +26,7 @@ def test_buy_item(logged_in_browser):
 
     inventory_page.open_cart()
 
-    cart_page = CartPage(logged_in_browser)
+    cart_page = CartPage(ui_log_in)
 
     cart_names = cart_page.get_all_names_in_cart()
     cart_prices = cart_page.get_all_prices_in_cart()
@@ -36,11 +36,11 @@ def test_buy_item(logged_in_browser):
         assert sorted(cart_items) == sorted(expected_items)
     cart_page.click_checkout_button()
 
-    checkout_step_one_page = CheckoutStepOnePage(logged_in_browser)
+    checkout_step_one_page = CheckoutStepOnePage(ui_log_in)
     checkout_step_one_page.fill_form("FirstName", "LastName", "01722489")
     checkout_step_one_page.click_continue()
 
-    checkout_step_two_page = CheckoutStepTwoPage(logged_in_browser)
+    checkout_step_two_page = CheckoutStepTwoPage(ui_log_in)
     check2_items_names = checkout_step_two_page.get_items_names()
     check2_items_prices = checkout_step_two_page.get_items_prices()
     check2_items = list(zip(check2_items_names, check2_items_prices))
@@ -66,7 +66,7 @@ def test_buy_item(logged_in_browser):
         assert total_with_tax_from_label == round(calculated_total_with_tax, 2)
     checkout_step_two_page.click_finish_button()
 
-    checkout_complete_page = CheckoutCompletePage(logged_in_browser)
+    checkout_complete_page = CheckoutCompletePage(ui_log_in)
     complete_header_text = checkout_complete_page.get_text_from_complete_header()
 
     with allure.step("Checking if the order is completed"):

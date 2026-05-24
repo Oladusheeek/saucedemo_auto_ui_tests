@@ -14,6 +14,8 @@ from pages.login_page import LoginPage
 
 from constants.constants import Users
 
+import requests
+
 def pytest_addoption(parser):
     parser.addoption(
         "--BN", "--browser-name",
@@ -88,7 +90,7 @@ def clean_browser_state(browser, base_url):
     browser.get("about:blank")
 
 @pytest.fixture
-def logged_in_browser(browser, base_url, request):
+def ui_log_in(browser, base_url, request):
 
     username = getattr(request, "param", Users.STANDARD)
 
@@ -104,6 +106,24 @@ def logged_in_browser(browser, base_url, request):
 
     yield browser
 
+@pytest.fixture
+def logged_in_browser(browser, base_url, request):
+    browser.get(base_url)
+
+    username = getattr(request, "param", Users.STANDARD)
+    browser.add_cookie({
+        'name': 'session-username',
+        'value': username,
+        'domain': 'www.saucedemo.com'
+    })
+
+    browser.get(f"{base_url}inventory.html")
+
+    WebDriverWait(browser, 5).until(
+        EC.url_contains("inventory")
+    )
+    
+    yield browser
 
 
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)

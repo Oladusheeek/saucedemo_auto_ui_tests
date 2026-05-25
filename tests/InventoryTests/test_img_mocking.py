@@ -7,8 +7,8 @@ class TestMocking:
 
     @allure.title("Mocking 'Image not found' error")
     @allure.severity(allure.severity_level.NORMAL)
-    def test_mock_broken_images(self, api_log_in):
-        browser = api_log_in
+    def test_mock_broken_images(self, logged_in_browser):
+        browser = logged_in_browser
 
         def block_images(request):
             if '.jpg' in request.url:
@@ -23,7 +23,7 @@ class TestMocking:
         try:
             with allure.step("Refreshing page to enable mock"):
                 browser.refresh()
-                inventory_page = InventoryPage(api_log_in)
+                inventory_page = InventoryPage(logged_in_browser)
             
             images = inventory_page.get_all_item_images()
 

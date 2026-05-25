@@ -19,6 +19,8 @@ class TestMocking:
                 )
         with allure.step("Enabling interceptor"):
             browser.request_interceptor = block_images
+        with allure.step("Clearing cache"):
+            browser.execute_cdp_cmd('Network.clearBrowserCache', {})
 
         try:
             with allure.step("Refreshing page to enable mock"):
